@@ -11,6 +11,9 @@ except ModuleNotFoundError:
     print("Pytube module gak ada nih! Aku install dulu cuy")
     os.system('pip install pytube &> /dev/null')
     print("Ok siap")
+    import pytube
+    from pytube import YouTube
+
 from time import sleep
 W = '\033[1;37m'
 B = '\033[1;34m'
