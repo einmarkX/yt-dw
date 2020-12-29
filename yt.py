@@ -89,9 +89,8 @@ def download():
     print(G + "Rating •> ", yt.rating)
     sleep(1.5)
     dl = str(input(W + "Download Ke > "))
-    x = os.path.exists(dl)
     ys = yt.streams.get_highest_resolution()
-    if x==True:
+    if (os.path.isdir(dl)):
         print( Y + "Memulai Download.....")
         ys.download(dl)
     else:
