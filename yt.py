@@ -88,8 +88,11 @@ def download():
     sleep(0.2)
     print(G + "Rating •> ", yt.rating)
     sleep(1.5)
+
+    ys = pilihvideo(yt)
+
     dl = str(input(W + "Download Ke > "))
-    ys = yt.streams.get_highest_resolution()
+    
     if (os.path.isdir(dl)):
         print( Y + "Memulai Download.....")
         ys.download(dl)
@@ -138,5 +141,44 @@ def menu():
         cheems()
     else:
         print(R + "Pilihan Invalid")
-menu() 
+
+def ceksize(filesize: 0):
+    """ parameter : int (byte) """
+    ukuran = "bit"
+    if (filesize < 1000):
+        ukuran = "byte"
+        filesize = (filesize/1000)
+    elif (filesize < 1000000):
+        ukuran = "kB"
+        filesize = (filesize/100000)
+    elif (filesize >= 1000000):
+        ukuran = "MB"
+        filesize = (filesize/1000000)
+
+    return "{0:.1f} {1}".format(filesize, ukuran)
+
+
+def pilihvideo(yt):
+    yts = yt.streams.filter().order_by('filesize')
+    print("\n" + W + "{0:2} {1:10} {2}".format('No', 'Resolusi', 'Size'))
+    
+    for i,data in enumerate(yts, start=1):
+        resolusi = data.resolution
+        if (data.type == 'audio'):
+            resolusi = 'Audio'
+        print(W + "{0:2} {1:10} {2}".format(i, resolusi, ceksize(data.filesize)))
+
+    strpilih = "\n" + W + "Pilih Nomor 1 sampai {0} :".format(str(len(yts)) )
+    pilih= (input(strpilih))
+
+    try:
+        pilihint = int(pilih)
+        if (pilihint > len(yts)):
+            raise ValueError()
+    except ValueError:
+        print(W + pilih + " Tidak Valid")
+        pilihvideo()
+
+    return yts[int(pilih)]
 #
+menu()
