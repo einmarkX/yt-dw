@@ -104,7 +104,7 @@ def download():
     conv = str(input(Y + "[?] Convert Ke MP3 (Y/t) "))
     if conv == "Y":
         os.chdir(dl)
-        oldn = yt.title + '.mp4'
+        oldn_v2 = yt.title + '.mp4'
         oldn = yt.title + '.webm'
         newn = yt.title + '.mp3'
         lz = os.path.isfile(oldn)
