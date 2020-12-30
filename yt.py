@@ -14,6 +14,8 @@ Y = '\033[1;33m'
 try:
     import pytube
     from pytube import YouTube
+
+    import ffmpeg
     print(G + "Mantap! Pytube module terinstall!")
 except ModuleNotFoundError:
     print(R + "Pytube module gak ada nih! Aku install dulu cuy")
@@ -40,6 +42,7 @@ banmer = """
 2 > Tentang 
 
 """
+
 def about():
     os.system("clear")
     sleep(0.5)
@@ -165,24 +168,47 @@ def ceksize(filesize: 0):
     return "{0:.1f} {1}".format(filesize, ukuran)
 
 
-def pilihvideo(yt):
-    yts = yt.streams.filter().order_by('filesize')
-    print("\n" + Y + "{0:2} {1:10} {2}".format('No', 'Resolusi', 'Size'))
+def pilihvideo():
+    save_path = "D:/b"
+    yt = YouTube("https://www.youtube.com/watch?v=8uy7G2JXVSA")
     
-    for i,data in enumerate(yts, start=1):
+    yts = yt.streams
+    yt_video = yts.filter(type='video')
+    yt_audio = yts.get_audio_only()
+
+    print(str(yt_video.first().default_filename()))
+    
+    print("\n" + Y + "{0:2} {1:10} {2}".format('No', 'Resolusi', 'Size'))
+
+    
+    for i,data in enumerate(yt_video, start=1):
         resolusi = data.resolution
-        if (data.type == 'audio'):
-            resolusi = 'Audio'
-        print(W + "{0:2} {1:10} {2}".format(i, resolusi, ceksize(data.filesize)))
+        print(W + " {0:2} {1:10} {2}".format(i, resolusi, ceksize(data.filesize)))
+    
+    print(W + " {0:2} {1:10} {2}".format(len(yt_video)+1,"MP3", ceksize(yt_audio.filesize)))
 
-    strpilih = "\n" + G + "Pilih Nomor 1 sampai {0} > ".format(str(len(yts)) )
-    pilih= (input(strpilih))
-
+    yt_audio.download(output_path=save_path ,filename_prefix='audio_')
+    #yt_video.download(output_path=save_path, filename_prefix='video_')
+    #os.chdir(save_path)
+    
+    strpilih = input("\n" + G + "Pilih Nomor 1 sampai {0} > ".format(str(len(yts)) ))
+    
     try:
-        pilihint = int(pilih) - 1
-        if (pilihint > len(yts)):
+        pilihint = int(strpilih) - 1
+        if (pilihint >= (len(yts)+1) ):
             raise ValueError()
-        return yts[pilihint]
+
+        vt_video_pilih = yt_video[pilihint]
+        os.chdir(save_path)
+        print(vt_video_pilih.default_filename())
+        
+        #vt_video_pilih.download(output_path=save_path, filename_prefix='video_')
+        
+ #       i_video = ffmpeg.input("video_".vt_video_pilih.filename)
+ #       i_audio = ffmpeg.input("audio_".vt_audio.filename)
+        
+        #ffmpeg.concat(i_video, i_audio, v=1, a=1).output(yt_video_filename).run()
+#       return yts[pilihint]
         
     except ValueError:
         print(R + "Pilihan Tidak Valid")
@@ -190,4 +216,4 @@ def pilihvideo(yt):
 
 
 #
-menu()
+pilihvideo()
