@@ -160,7 +160,7 @@ def ceksize(filesize: 0):
 
 def pilihvideo(yt):
     yts = yt.streams.filter().order_by('filesize')
-    print("\n" + W + "{0:2} {1:10} {2}".format('No', 'Resolusi', 'Size'))
+    print("\n" + Y + "{0:2} {1:10} {2}".format('No', 'Resolusi', 'Size'))
     
     for i,data in enumerate(yts, start=1):
         resolusi = data.resolution
@@ -168,7 +168,7 @@ def pilihvideo(yt):
             resolusi = 'Audio'
         print(W + "{0:2} {1:10} {2}".format(i, resolusi, ceksize(data.filesize)))
 
-    strpilih = "\n" + W + "Pilih Nomor 1 sampai {0} :".format(str(len(yts)) )
+    strpilih = "\n" + G + "Pilih Nomor 1 sampai {0} :".format(str(len(yts)) )
     pilih= (input(strpilih))
 
     try:
@@ -176,7 +176,7 @@ def pilihvideo(yt):
         if (pilihint > len(yts)):
             raise ValueError()
     except ValueError:
-        print(W + pilih + " Tidak Valid")
+        print(R + Pilihan + " Tidak Valid")
         pilihvideo()
 
     return yts[int(pilih)]
