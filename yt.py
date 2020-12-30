@@ -28,7 +28,7 @@ banner = """
 __   _______   
 \ \ / /_   _| 
  \ V /  | |   
-  | |   | |   v1.4-3 Stable
+  | |   | |   v1.4-4 Stable
   |_|   |_|   Downloader 
 
 {}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{}
@@ -104,8 +104,8 @@ def download():
     conv = str(input(Y + "[?] Convert Ke MP3 (Y/t) "))
     if conv == "Y":
         os.chdir(dl)
-        oldn_v2 = yt.title + '.mp4'
-        oldn = yt.title + '.webm'
+        oldn = yt.title + '.mp4'
+        oldn_v2 = yt.title + '.webm'
         newn = yt.title + '.mp3'
         lz = os.path.isfile(oldn)
         xz = os.path.isfile(oldn_v2)
