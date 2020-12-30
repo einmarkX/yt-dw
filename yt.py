@@ -172,13 +172,15 @@ def pilihvideo(yt):
     pilih= (input(strpilih))
 
     try:
-        pilihint = int(pilih)
+        pilihint = int(pilih) - 1
         if (pilihint > len(yts)):
             raise ValueError()
+        return yts[pilihint]
+        
     except ValueError:
         print(R + "Pilihan Tidak Valid")
         pilihvideo()
 
-    return yts[int(pilih)]
+
 #
 menu()
