@@ -158,30 +158,20 @@ class DownloadYT():
             if (not os.path.exists(v) or not os.path.exists(a)):
                 print("File Tidak ditemukan")
                 os.close()
-                
-            print(v)
-            subprocess.run(
-                [
-                    "php",
-                    "-i",
-                    v,
-                    "-i",
-                    a,
-                    "-codec",
-                    "copy",
-                    "./sate.mp4"
-                ]
-            )
-            """
+            
             i_video = ffmpeg.input(v)
-            i_audio = ffmpeg.input(a).audio.filter('adelay', "1500|1500")
+            # i_audio = ffmpeg.input(a).audio.filter('adelay', "1500|1500")
+            i_audio = ffmpeg.input(a)
 
-            merge_iaudio = ffmpeg.filter([i_video, i_audio], 'amix')
+            fusion  = ffmpeg.concat(i_video, i_audio, v=1, a=1).output('./sate.mp4')
+            fusion.run()
+            
 
+            #merge_iaudio = ffmpeg.filter([i_video, i_audio], 'amix')
           
 
     
-            """
+            
             """
             return
             proses = (
@@ -194,8 +184,7 @@ class DownloadYT():
             out, err = proses.communicate()
             
             
-            fusion  = ffmpeg.concat(i_video, i_audio, v=1, a=1).output('./sate')
-            fusion.run()
+            
             print(fusion)
             #.output('jadi.mp4').run()
            """
