@@ -15,9 +15,16 @@ B = '\033[1;34m'
 R = '\033[1;31m'
 G = '\033[1;32m'
 Y = '\033[1;33m'
+
+from pytube.cli import (
+    _ffmpeg_downloader as downloaders,
+    _unique_name as fileUnique,
+    _download as clidownload
+    )
 try:
-    import pytube
-    from pytube import YouTube
+    from pytube import YouTube, Stream, helpers
+    
+
 
     import ffmpeg
     print(G + "Mantap! Pytube module terinstall!")
@@ -25,7 +32,6 @@ except ModuleNotFoundError:
     print(R + "Pytube module gak ada nih! Aku install dulu cuy")
     os.system('pip install pytube &> /dev/null')
     print(G + "Ok siap")
-    import pytube
     from pytube import YouTube
 
 from time import sleep
@@ -73,7 +79,61 @@ def cheems():
 def bckmenu():
     menu()
 
-class DownloadYT():
+class RewriteFunction(object):
+    """
+    Fungsi ini untuk menulis ulang fungsi-fungsi yang telah disediakan
+    """
+    def Downloaderffmpeg(
+        self, audio_stream: Stream, video_stream: Stream, target: str 
+    ):
+        video_unique_name = fileUnique(
+            helpers.safe_filename(video_stream.title),
+            video_stream.subtype,
+            "video",
+            target=target,
+        )
+
+        audio_unique_name = fileUnique(
+            helpers.safe_filename(video_stream.title),
+            audio_stream.subtype,
+            "audio",
+            target=target,
+        )
+
+        clidownload(stream=video_stream, target=target, filename=video_unique_name)
+        print("Loading audio...")
+        clidownload(stream=audio_stream, target=target, filename=audio_unique_name)
+
+        video_path = os.path.join(
+            target, f"{video_unique_name}.{video_stream.subtype}"
+        )
+        audio_path = os.path.join(
+            target, f"{audio_unique_name}.{audio_stream.subtype}"
+        )
+        final_path = os.path.join(
+            target, f"{helpers.safe_filename(video_stream.title)}.{video_stream.subtype}"
+        )
+
+        subprocess.run(  # nosec
+            [
+                "ffmpeg",
+                "-i",
+                video_path,
+                "-i",
+                audio_path,
+                "-codec",
+                "copy",
+                final_path,
+                "-loglevel",
+                "quiet"
+            ]
+        )
+        """
+        os.unlink(video_path)
+        os.unlink(audio_path)
+        """
+
+class DownloadYT(RewriteFunction):
     def __init__(self, isDebug=False):
         """ Constructor 
         :param boolean debug:
@@ -111,23 +171,25 @@ class DownloadYT():
         self._YT = YT
         
     def tanyaLink(self):
-        if self._isDebug:
-            self._link = 'https://www.youtube.com/watch?v=8uy7G2JXVSA'
-            return
-        link = urlparse(input("Link Youtube: "))
-        #print(link)
+        """ Cek apakah link valid atau tidak """
+        try:
+            if self._isDebug:
+                self._link = 'https://www.youtube.com/watch?v=8uy7G2JXVSA'
+                return
 
-        if link.netloc is None:
-            print("Link Tidak Valid")
+            tanya = input("Link Youtube: ")
+            link = urlparse(tanya)
+            
+            if not link.scheme :
+                raise ValueError("Link Tidak Valid")
+            if not (link.netloc == 'www.youtube.com'):
+                raise ValueError("Bukan Link Youtube")
+
+            self._link = tanya
+
+        except ValueError as pesan:
+            print(pesan)
             self.tanyaLink()
-        if not (link.netloc == 'www.youtube.com'):
-            print("Bukan Link Youtube")
-            self.tanyaLink()
-        self._link = link
-
-
-        self._Audio = None
-        self._Video = None
         
     def DownloadVideo(self, tipe):
         prefix_audio = 'audio_'
@@ -166,28 +228,6 @@ class DownloadYT():
             fusion  = ffmpeg.concat(i_video, i_audio, v=1, a=1).output('./sate.mp4')
             fusion.run()
             
-
-            #merge_iaudio = ffmpeg.filter([i_video, i_audio], 'amix')
-          
-
-    
-            
-            """
-            return
-            proses = (
-                ffmpeg
-                .concat(i_video, merge_iaudio, v=1, a=1)
-                .output("./mix_delay.mp4")
-                .overwrite_output()
-                .run_async(pipe_stdin=True)
-            )
-            out, err = proses.communicate()
-            
-            
-            
-            print(fusion)
-            #.output('jadi.mp4').run()
-           """
         elif tipe == 'Audio':
             self._Audio.download(self._savePath, filename_prefix="MP3_")
             
@@ -201,13 +241,15 @@ class DownloadYT():
     
     def run(self):
 
-        """
+        
         if(self._isDebug):
             print("Mode Debug Active")
             
         if self._link is None:
             self.tanyaLink()
 
+        print("Link yang di dapat",self._link)
+        return 
         self._YT = YouTube(self._link)
         self._YT.check_availability
             
@@ -215,9 +257,10 @@ class DownloadYT():
         pilihan = self.resolusi()
         print("Pilihan kamu: ", pilihan)
         
-        self.DownloadVideo(pilihan)
-        """
-        self.DownloadVideo('Video')
+        super(DownloadYT, self).Downloaderffmpeg(self._Audio, self._Video, self._savePath)
+
+        #self.DownloadVideo(pilihan)
+        #self.DownloadVideo('Video')
         
 
     def garis(self) -> str:
@@ -437,6 +480,6 @@ class DownloadYT():
 
     #
 
-MX = DownloadYT(True)
+MX = DownloadYT()
 MX.run()
 
