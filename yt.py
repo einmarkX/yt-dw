@@ -7,6 +7,8 @@
 #Thanks !
 
 from urllib.parse import urlparse, parse_qs
+import subprocess
+
 import os,sys,time,os.path
 W = '\033[1;37m'
 B = '\033[1;34m'
@@ -134,31 +136,83 @@ class DownloadYT():
         
         if tipe == 'Video':
 
-            v = self._Video.download(self._savePath, filename_prefix=prefix_video)
-            a = self._Audio.download(self._savePath, filename_prefix=prefix_audio)
+            #v = self._Video.download(self._savePath, filename_prefix=prefix_video)
+            #a = self._Audio.download(self._savePath, filename_prefix=prefix_audio)
 
             
-            input_video = ffmpeg.input(v)
-            input_audio = ffmpeg.input(a)
-            in_file = input_video
-            print(v)
-            print(a)
+            #input_video = ffmpeg.input(v)
+            #input_audio = ffmpeg.input(a)
+            #in_file = input_video
+            #print(v)
+            #print(a)
             
             
+            #os.chdir(self._savePath)
+            #print(ffmpeg)
+            #ffmpeg.concat( input_video.trim(start_frame=10, end_frame=20), input_video.trim(start_frame=30, end_frame=40)).output('./satekambing.mp4').run()
+
             os.chdir(self._savePath)
+            v = "./video_Weird Genius - Lathi (ft Sara Fajira) Official Music Video.mp4"
+            a = "./audio_Weird Genius - Lathi (ft Sara Fajira) Official Music Video.mp4"
             
-            ffmpeg.concat( input_video.trim(start_frame=10, end_frame=20), input_video.trim(start_frame=30, end_frame=40)).output('satekambing.mp4').run()
+            if (not os.path.exists(v) or not os.path.exists(a)):
+                print("File Tidak ditemukan")
+                os.close()
+                
+            print(v)
+            subprocess.run(
+                [
+                    "php",
+                    "-i",
+                    v,
+                    "-i",
+                    a,
+                    "-codec",
+                    "copy",
+                    "./sate.mp4"
+                ]
+            )
+            """
+            i_video = ffmpeg.input(v)
+            i_audio = ffmpeg.input(a).audio.filter('adelay', "1500|1500")
+
+            merge_iaudio = ffmpeg.filter([i_video, i_audio], 'amix')
+
+          
+
+    
+            """
+            """
+            return
+            proses = (
+                ffmpeg
+                .concat(i_video, merge_iaudio, v=1, a=1)
+                .output("./mix_delay.mp4")
+                .overwrite_output()
+                .run_async(pipe_stdin=True)
+            )
+            out, err = proses.communicate()
             
+            
+            fusion  = ffmpeg.concat(i_video, i_audio, v=1, a=1).output('./sate')
+            fusion.run()
+            print(fusion)
+            #.output('jadi.mp4').run()
+           """
         elif tipe == 'Audio':
             self._Audio.download(self._savePath, filename_prefix="MP3_")
             
             
+
+
     @isDebug.setter
     def isDebug(self, isDebug):
         self._isDebug = isDebug
         
     
     def run(self):
+
+        """
         if(self._isDebug):
             print("Mode Debug Active")
             
@@ -171,7 +225,10 @@ class DownloadYT():
         self.infoVideo()
         pilihan = self.resolusi()
         print("Pilihan kamu: ", pilihan)
+        
         self.DownloadVideo(pilihan)
+        """
+        self.DownloadVideo('Video')
         
 
     def garis(self) -> str:
