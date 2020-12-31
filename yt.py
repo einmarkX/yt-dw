@@ -85,7 +85,7 @@ class RewriteFunction(object):
     """
     def Downloaderffmpeg(
         self, audio_stream: Stream, video_stream: Stream, target: str 
-    ):
+    )-> str:
         video_unique_name = fileUnique(
             helpers.safe_filename(video_stream.title),
             video_stream.subtype,
@@ -111,30 +111,43 @@ class RewriteFunction(object):
             target, f"{audio_unique_name}.{audio_stream.subtype}"
         )
         final_path = os.path.join(
-            target, f"{helpers.safe_filename(video_stream.title)}.{video_stream.subtype}"
+            # target, f"{helpers.safe_filename(video_stream.title)}.{video_stream.subtype}"
+            target, f"{helpers.safe_filename(video_stream.title)}.mp4"
         )
 
-        subprocess.run(  # nosec
-            [
-                "ffmpeg",
-                "-i",
-                video_path,
-                "-i",
-                audio_path,
-                "-codec",
-                "copy",
-                final_path,
-                "-loglevel",
-                "quiet"
-            ]
-        )
-        """
-        os.unlink(video_path)
-        os.unlink(audio_path)
-        """
+        try:
+            subprocess.run(  
+                [
+                    "ffmpeg",
+                    "-i",
+                    video_path,
+                    "-i",
+                    audio_path,
+                    "-codec",
+                    "copy",
+                    final_path,
+                    "-loglevel",
+                    "quiet"
+                ]
+            )
+        except:
+            print("Ada kesalahan saat menggabungkan video")
+            sleep(0.5)
+            print("Tapi tenang, file video dan audio masih ada")            
+        finally:
+            print("File berhasil di didownload")
+            print("File disimpan di \n",final_path)
+
+            os.unlink(video_path)
+            os.unlink(audio_path)
+            return final_path
+
+        return None
+            
 
 class DownloadYT(RewriteFunction):
     def __init__(self, isDebug=False):
+        
         """ Constructor 
         :param boolean debug:
             untuk mengecek dalam mode pengembang atau tidak
@@ -197,22 +210,6 @@ class DownloadYT(RewriteFunction):
         print("Tipe :",tipe)
         
         if tipe == 'Video':
-
-            #v = self._Video.download(self._savePath, filename_prefix=prefix_video)
-            #a = self._Audio.download(self._savePath, filename_prefix=prefix_audio)
-
-            
-            #input_video = ffmpeg.input(v)
-            #input_audio = ffmpeg.input(a)
-            #in_file = input_video
-            #print(v)
-            #print(a)
-            
-            
-            #os.chdir(self._savePath)
-            #print(ffmpeg)
-            #ffmpeg.concat( input_video.trim(start_frame=10, end_frame=20), input_video.trim(start_frame=30, end_frame=40)).output('./satekambing.mp4').run()
-
             os.chdir(self._savePath)
             v = "./video_Weird Genius - Lathi (ft Sara Fajira) Official Music Video.mp4"
             a = "./audio_Weird Genius - Lathi (ft Sara Fajira) Official Music Video.mp4"
@@ -222,7 +219,6 @@ class DownloadYT(RewriteFunction):
                 os.close()
             
             i_video = ffmpeg.input(v)
-            # i_audio = ffmpeg.input(a).audio.filter('adelay', "1500|1500")
             i_audio = ffmpeg.input(a)
 
             fusion  = ffmpeg.concat(i_video, i_audio, v=1, a=1).output('./sate.mp4')
@@ -240,8 +236,8 @@ class DownloadYT(RewriteFunction):
         
     
     def run(self):
+        """ Fungsi awal saat program dijalankan """
 
-        
         if(self._isDebug):
             print("Mode Debug Active")
             
@@ -249,18 +245,23 @@ class DownloadYT(RewriteFunction):
             self.tanyaLink()
 
         print("Link yang di dapat",self._link)
-        return 
+        
         self._YT = YouTube(self._link)
         self._YT.check_availability
             
         self.infoVideo()
+        sleep(3)
         pilihan = self.resolusi()
         print("Pilihan kamu: ", pilihan)
         
-        super(DownloadYT, self).Downloaderffmpeg(self._Audio, self._Video, self._savePath)
-
-        #self.DownloadVideo(pilihan)
-        #self.DownloadVideo('Video')
+        try:
+            super(DownloadYT, self).Downloaderffmpeg(self._Audio, self._Video, self._savePath)
+        
+        except:
+            print("Terjadi kesalahan!")
+            return
+        
+        
         
 
     def garis(self) -> str:
@@ -323,7 +324,6 @@ class DownloadYT(RewriteFunction):
 
         print("{0:2} {1:10} {2}".format(len(yt_video)+1,"Audio MP3", self.ceksize(yt_audio.filesize)))
         print(self.garis())
-        
         strpilih = "Pilih Nomor 1 sampai {0} : ".format(str(jumlahpilihan) )
 
         pilih = self.pilihAngka(strpilih)
@@ -343,142 +343,6 @@ class DownloadYT(RewriteFunction):
 
         
         
-        
-        
-        
-    def download2():
-        os.system("clear")
-        sleep(1)
-        print(banner)
-        print("")
-        sleep(0.1)
-        link = str(input(G + "Link Youtube •> "))
-        yt = YouTube(link)
-        lod = "\|/-\|/-"
-        for i in range(110):
-            sleep(0.1)
-            sys.stdout.write("\r" + lod[i % len(lod)])
-            sys.stdout.flush()
-        os.system("clear")
-        sleep(1.4)
-        print(banner)
-        sleep(0.1)
-        print(G + "Judul •> " ,yt.title)
-        sleep(0.1)
-        print(G + "Views •> ",yt.views)
-        sleep(0.2)
-        print(G + "Rating •> ", yt.rating)
-        sleep(1.5)
-
-        ys = pilihvideo(yt)
-
-        dl = str(input(W + "Download Ke > "))
-        
-        if (os.path.isdir(dl)):
-            print( Y + "Memulai Download.....")
-            ys.download(dl)
-        else:
-            print(R + "[!] Direktori Tidak ada")
-        sleep(1)                                                        
-        os.system("clear")
-        print(banner)
-        conv = str(input(Y + "[?] Convert Ke MP3 (Y/t) "))
-        if conv == "Y":
-            os.chdir(dl)
-            oldn = yt.title + '.mp4'
-            oldn_v2 = yt.title + '.webm'
-            newn = yt.title + '.mp3'
-            lz = os.path.isfile(oldn)
-            xz = os.path.isfile(oldn_v2)
-            if lz==True:
-                os.rename(oldn,newn)
-                print(G + "[✓] Sukses")
-            elif xz==True:
-                os.rename(oldn_v2,newn)
-                print(G + "[✓] Sukses")
-            else:
-                print(R + "[!] File Tidak Ada ")
-                print(R + "[!] Gagal ")
-            
-        elif conv == "t":                                           
-           print(G + "[*] Ok ! ")
-        else:
-            print(R + "[!] Pilihan Invalid ")
-        print(G + "Selesai ! ")
-        sleep(1.5)
-        bckmenu()
-
-        
-    def menu():
-        animation = "\|/-\|/-"
-        for i in range(115):
-            sleep(0.1)
-            sys.stdout.write("\r" + animation[i % len(animation)])
-            sys.stdout.flush()
-        os.system("clear")
-        sleep(1.5)
-        print(Y + banner)
-        sleep(0.1)
-        print(G + banmer)
-        inp = str(input(G + "> "))
-        if inp == "1":
-            download()
-        elif inp == "2": 
-            about()
-        elif inp == "96":
-            cheems()
-        else:
-            print(R + "Pilihan Invalid")
-
-    
-    def pilihvideo():
-        save_path = "D:/b"
-        yt = YouTube("https://www.youtube.com/watch?v=8uy7G2JXVSA")
-        
-        yts = yt.streams
-        yt_video = yts.filter(type='video')
-        yt_audio = yts.get_audio_only()
-
-        print(str(yt_video.first().default_filename()))
-        
-        print("\n" + Y + "{0:2} {1:10} {2}".format('No', 'Resolusi', 'Size'))
-
-        
-        for i,data in enumerate(yt_video, start=1):
-            resolusi = data.resolution
-            print(W + " {0:2} {1:10} {2}".format(i, resolusi, ceksize(data.filesize)))
-        
-        print(W + " {0:2} {1:10} {2}".format(len(yt_video)+1,"MP3", ceksize(yt_audio.filesize)))
-
-        yt_audio.download(output_path=save_path ,filename_prefix='audio_')
-        #yt_video.download(output_path=save_path, filename_prefix='video_')
-        #os.chdir(save_path)
-        
-        strpilih = input("\n" + G + "Pilih Nomor 1 sampai {0} > ".format(str(len(yts)) ))
-        
-        try:
-            pilihint = int(strpilih) - 1
-            if (pilihint >= (len(yts)+1) ):
-                raise ValueError()
-
-            vt_video_pilih = yt_video[pilihint]
-            os.chdir(save_path)
-            print(vt_video_pilih.default_filename())
-            
-            #vt_video_pilih.download(output_path=save_path, filename_prefix='video_')
-            
-     #       i_video = ffmpeg.input("video_".vt_video_pilih.filename)
-     #       i_audio = ffmpeg.input("audio_".vt_audio.filename)
-            
-            #ffmpeg.concat(i_video, i_audio, v=1, a=1).output(yt_video_filename).run()
-    #       return yts[pilihint]
-            
-        except ValueError:
-            print(R + "Pilihan Tidak Valid")
-            pilihvideo()
-
-
-    #
 
 MX = DownloadYT()
 MX.run()
