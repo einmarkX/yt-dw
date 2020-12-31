@@ -143,7 +143,51 @@ class RewriteFunction(object):
             return final_path
 
         return None
-            
+
+    def DownloadMP3(self, audio_stream: Stream, target: str):
+        """ Untuk download mp3 """
+        audio_unique_name = fileUnique(
+            helpers.safe_filename(audio_stream.title),
+            audio_stream.subtype,
+            "audio",
+            target=target,
+        )
+        clidownload(stream=audio_stream, target=target, filename=audio_unique_name)
+        
+        audio_path = os.path.join(
+            target, f"{audio_unique_name}.{audio_stream.subtype}"
+        )
+        
+        final_path = os.path.join(
+            target, f"{helpers.safe_filename(audio_stream.title)}.mp3"
+        )
+
+        try:
+            subprocess.run(  
+                [
+                    "ffmpeg",
+                    "-i",
+                    audio_path,
+                    "-b:a",
+                    "192K",
+                    "-vn",
+                    final_path,
+                    "-loglevel",
+                    "quiet"
+                ]
+            )
+        except:
+            print("Ada kesalahan saat menggabungkan video")
+            sleep(0.5)
+            print("Tapi tenang, file udio masih ada")            
+        finally:
+            print("File berhasil di didownload")
+            print("File disimpan di \n",final_path)
+
+            os.unlink(audio_path)
+            return final_path
+
+        return None
 
 class DownloadYT(RewriteFunction):
     def __init__(self, isDebug=False):
@@ -203,32 +247,6 @@ class DownloadYT(RewriteFunction):
         except ValueError as pesan:
             print(pesan)
             self.tanyaLink()
-        
-    def DownloadVideo(self, tipe):
-        prefix_audio = 'audio_'
-        prefix_video = 'video_'
-        print("Tipe :",tipe)
-        
-        if tipe == 'Video':
-            os.chdir(self._savePath)
-            v = "./video_Weird Genius - Lathi (ft Sara Fajira) Official Music Video.mp4"
-            a = "./audio_Weird Genius - Lathi (ft Sara Fajira) Official Music Video.mp4"
-            
-            if (not os.path.exists(v) or not os.path.exists(a)):
-                print("File Tidak ditemukan")
-                os.close()
-            
-            i_video = ffmpeg.input(v)
-            i_audio = ffmpeg.input(a)
-
-            fusion  = ffmpeg.concat(i_video, i_audio, v=1, a=1).output('./sate.mp4')
-            fusion.run()
-            
-        elif tipe == 'Audio':
-            self._Audio.download(self._savePath, filename_prefix="MP3_")
-            
-            
-
 
     @isDebug.setter
     def isDebug(self, isDebug):
@@ -252,11 +270,12 @@ class DownloadYT(RewriteFunction):
         self.infoVideo()
         sleep(3)
         pilihan = self.resolusi()
-        print("Pilihan kamu: ", pilihan)
         
         try:
-            super(DownloadYT, self).Downloaderffmpeg(self._Audio, self._Video, self._savePath)
-        
+            if pilihan == 'video':
+                super(DownloadYT, self).Downloaderffmpeg(self._Audio, self._Video, self._savePath)
+            else:
+                super(DownloadYT, self).DownloadMP3(self._Audio, self._savePath)
         except:
             print("Terjadi kesalahan!")
             return
