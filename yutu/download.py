@@ -2,7 +2,10 @@ from ffmpeg import RewriteFunction
 from pytube import YouTube
 from urllib.parse import urlparse, parse_qs
 
-from helpers import ceksize
+from helpers import ceksize, pilihAngka
+from logs import Logs
+from warna import prCyan
+
 import time
 class DownloadYT(RewriteFunction):
     def __init__(self, isDebug=False):
@@ -84,14 +87,7 @@ class DownloadYT(RewriteFunction):
 
             
     
-    def pilihAngka(self, tanya)-> int:
-        try:
-            pilih = int(input(tanya))
-        except ValueError:
-            print("Input Invalid")
-            pilihAngka(tanya)
 
-        return pilih
     
     def resolusi(self):
         yts = self._YT.streams
@@ -108,7 +104,7 @@ class DownloadYT(RewriteFunction):
         print(self.garis())
         strpilih = "Pilih Nomor 1 sampai {0} : ".format(str(jumlahpilihan) )
 
-        pilih = self.pilihAngka(strpilih)
+        pilih = pilihAngka(strpilih)
         
         if ((pilih) > jumlahpilihan):
             print("Pilihan Tidak Valid")
@@ -131,16 +127,19 @@ class DownloadYT(RewriteFunction):
             
         if self._link is None:
             self.tanyaLink()
-
-        print("Link yang di dapat",self._link)
         
         self._YT = YouTube(self._link)
         self._YT.check_availability
-            
+        
         self.infoVideo()
         time.sleep(3)
         pilihan = self.resolusi()
         
+        cek = Logs()
+        cek.run()
+
+        self._savePath = cek._path
+        print("Jenis file ", prCyan(pilihan))
         try:
             if pilihan == 'video':
                 super(DownloadYT, self).Downloaderffmpeg(self._Audio, self._Video, self._savePath)

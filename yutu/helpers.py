@@ -12,4 +12,12 @@ def ceksize(filesize: 0) -> str:
         filesize = (filesize/1000000)
 
     return "{0:.1f} {1}".format(filesize, ukuran)
-        
+
+def pilihAngka(tanya)-> int:
+    try:
+        pilih = int(input(tanya))
+    except ValueError:
+        print("Input Invalid")
+        pilihAngka(tanya)
+
+    return pilih
