@@ -1,6 +1,11 @@
 # PythonYoutubeDownloader
 Tool yang dibangun untuk mempermudah agar pengguna lebih mudah mendownload video yang ada di YouTube.
 
+
+
+
+
+
 ## How To / Panduan Penggunaan
 Membutuhkan beberapa `package`, untuk bisa menjalankan program ini dengan baik 
 seperti [pytube](https://github.com/nficano/pytube), `ffmpeg` 
@@ -21,7 +26,7 @@ git clone https://github.com/jabbarbie/PythonYoutubeDownloader.git`
 cd PythonYoutubeDownloader
 ```
 ``` bash
-python yt.ph
+python yutu
 ```
 ## :handshake: Team 
 Project ini dikerjakan oleh beberapa kontributor
