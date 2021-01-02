@@ -10,9 +10,9 @@ Requirements
 untuk windows, ffmpeg bisa didownload manual [di sini](https://github.com/BtbN/FFmpeg-Builds/releases/latest)
 
 ## Quick start  
-- `git clone https://github.com/jabbarbie/PythonYoutubeDownloader
-- cd PythonYoutubeDownloader 
-- python yutu
+    $ git clone https://github.com/jabbarbie/PythonYoutubeDownloader
+    $ cd PythonYoutubeDownloader 
+    $ python yutu
 
 
 ## :handshake: Team 
