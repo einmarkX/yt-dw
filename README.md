@@ -1,33 +1,18 @@
-# PythonYoutubeDownloader
-Tool yang dibangun untuk mempermudah agar pengguna lebih mudah mendownload video yang ada di YouTube.
+# Python Youtube Downloader
+Tool yang dibangun untuk mempermudah pengguna agar lebih mudah mendownload video yang ada di YouTube.
+dibangun dengan bahasa Python, menggunakan beberapa module seperti pytube dan ffmpeg
 
+Requirements
+------------
+    $ pip install pytube
+    $ pkg install ffmpeg
 
-
-
-
-
-## How To / Panduan Penggunaan
-Membutuhkan beberapa `package`, untuk bisa menjalankan program ini dengan baik 
-seperti [pytube](https://github.com/nficano/pytube), `ffmpeg` 
-dan tidak kalah penting, harus sudah terinstall python 
-
-## :iphone: Untuk Termux  
+## Quick start  
 - `pip install pytube`
-- `pkg install ffmpeg`
+- `pkg install ffmpeg` // untuk termux
 
-## :computer: Untuk Windows
-- `pip install pytube`
-- Download ffmpeg [di sini](https://github.com/BtbN/FFmpeg-Builds/releases) Kemudian install
-## Cara menjalankan - How to Run
-``` bash
-git clone https://github.com/jabbarbie/PythonYoutubeDownloader.git`
-```
-``` bash
-cd PythonYoutubeDownloader
-```
-``` bash
-python yutu
-```
+untuk windows, ffmpeg bisa didownload manual [di sini](https://github.com/BtbN/FFmpeg-Builds/releases/latest)
+
 ## :handshake: Team 
 Project ini dikerjakan oleh beberapa kontributor
 - [Jabbarbie](https://github.com/jabbarbie) 
