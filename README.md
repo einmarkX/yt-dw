@@ -7,11 +7,13 @@ Requirements
     $ pip install pytube
     $ pkg install ffmpeg
 
-## Quick start  
-- `pip install pytube`
-- `pkg install ffmpeg` // untuk termux
-
 untuk windows, ffmpeg bisa didownload manual [di sini](https://github.com/BtbN/FFmpeg-Builds/releases/latest)
+
+## Quick start  
+- `git clone https://github.com/jabbarbie/PythonYoutubeDownloader
+- cd PythonYoutubeDownloader 
+- python yutu
+
 
 ## :handshake: Team 
 Project ini dikerjakan oleh beberapa kontributor
