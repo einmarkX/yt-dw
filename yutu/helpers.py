@@ -1,3 +1,13 @@
+import sys
+import os
+from warna import prCyan, prRed, prYellow
+
+def s(kata)->str:
+    return "  %s" % (kata)
+
+def garis()->str:
+    return s("============================================") #40
+
 def ceksize(filesize: 0) -> str:
     """ parameter : int (byte) """
     ukuran = "bit"
@@ -13,11 +23,29 @@ def ceksize(filesize: 0) -> str:
 
     return "{0:.1f} {1}".format(filesize, ukuran)
 
-def pilihAngka(tanya)-> int:
-    try:
-        pilih = int(input(tanya))
-    except ValueError:
-        print("Input Invalid")
-        pilihAngka(tanya)
-
+def pilihAngka(tanya)->int:
+    while True:
+        try:
+            pilih = int(input(tanya))
+            return pilih
+        except Exception:
+            print(s("%s" % prRed("Bukan angka!")))
     return pilih
+
+def cls():
+    # karena di windows pakenya cls
+    if sys.platform == 'win32':
+        os.system("cls")
+        return
+    os.system("clear")
+
+def cetakgaris(kata):
+    spasi = ""
+    jum = int((46 - len(kata)) / 2) - 2
+    print(prCyan(garis()))
+    for ispace in range( jum ):
+        spasi = "{} ".format(spasi)
+
+    print("  {0}{1}{2}{1}{0}".format(prCyan("|"), spasi , prYellow(kata)))
+    print(prCyan(garis()))
+    print("")

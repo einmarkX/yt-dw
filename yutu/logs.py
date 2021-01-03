@@ -1,6 +1,7 @@
 import configparser
 import os
 from warna import prRed, prGreen, prCyan
+from helpers import s
 
 class Logs:
     """
@@ -15,7 +16,6 @@ class Logs:
         self._lokasiconfig = "./yutu/config/config.ini"
     
     def cek(self)-> bool:
-        print("Proses pengecekan lokasi download")
         config = configparser.ConfigParser()
         try:
             if not os.path.exists(self._lokasiconfig):
@@ -36,7 +36,7 @@ class Logs:
             self._isValidPath = True
 
         except Exception as Pesan:
-            print("Error: ",prRed(Pesan))
+            print(s("Error: %s" %(prRed(Pesan))))
             self._isValidPath = False
             return False
         
@@ -53,29 +53,30 @@ class Logs:
         with open(self._lokasiconfig, 'w') as configfile:
             config.write(configfile)
 
-        print("Default Lokasi download sudah diganti ke ")
-        print(prGreen(pilih))
+        print(s("Default Lokasi download sudah diganti ke "))
+        print(s(prGreen(pilih)))
 
     def gantiPath(self):
         try:
-            pilih = (input("Apakah ingin menggantinya ? opsi (y/t) "))
-            print(pilih)
+            pilih = (input(s("Apakah ingin menggantinya ? opsi (y/t) ")))
             if pilih == 'y' or pilih  == 'Y':
                 self.simpanPath()
                 
             
         except Exception as Pesan:
-            print("Error: ",prRed(Pesan))
+            print(s("Error: %s" %(prRed(Pesan))))
             self.gantiPath()
 
         
 
 
     def run(self):
-        # print("Running..")
+        # print(s("Running..")
         self.cek()
         if(self._isValidPath):
-            print("Lokasi penyimpanan ditemukan di ", prCyan(self._path))
+            print(s("Lokasi penyimpanan ditemukan di: " ))
+            print(s("%s" %(prGreen(self._path))))
+            print("")
             self.gantiPath()
         else:
             self.simpanPath()
