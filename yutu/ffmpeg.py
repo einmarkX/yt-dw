@@ -5,9 +5,9 @@ from pytube.cli import (
     _unique_name as fileUnique,
     _download as clidownload
     )
-
+from warna import prRed, prGreen
 import subprocess
-
+from helpers import s
 class RewriteFunction(object):
     """
     Fungsi ini untuk menulis ulang fungsi-fungsi yang telah disediakan
@@ -30,7 +30,6 @@ class RewriteFunction(object):
         )
 
         clidownload(stream=video_stream, target=target, filename=video_unique_name)
-        print("Loading audio...")
         clidownload(stream=audio_stream, target=target, filename=audio_unique_name)
 
         video_path = os.path.join(
@@ -64,8 +63,8 @@ class RewriteFunction(object):
             sleep(0.5)
             print("Tapi tenang, file video dan audio masih ada")            
         finally:
-            print("File berhasil di didownload")
-            print("File disimpan di \n",final_path)
+            print(s("%s" % prGreen("Success")))
+            print(s("File disimpan di %s" % prGreen(final_path)))
 
             os.unlink(video_path)
             os.unlink(audio_path)

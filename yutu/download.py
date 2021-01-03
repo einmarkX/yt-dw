@@ -4,9 +4,12 @@ from urllib.parse import urlparse, parse_qs
 
 from helpers import ceksize, pilihAngka
 from logs import Logs
-from warna import prCyan
-
+from warna import prCyan, prYellow, prLightGray, prRed
+from helpers import cls, s, cetakgaris, garis
 import time
+from banner import Banner
+import sys
+
 class DownloadYT(RewriteFunction):
     def __init__(self, isDebug=False):
         """ Constructor 
@@ -21,8 +24,6 @@ class DownloadYT(RewriteFunction):
         self._YT = YouTube
         self._savePath = 'D:/b'
         
-    def garis(self)->str:
-        return("========================================")
     @property
     def isDebug(self):
         """Get Mode"""
@@ -41,7 +42,6 @@ class DownloadYT(RewriteFunction):
 
     @link.setter
     def YT(self, YT):
-        print("Dibuat")
         self._YT = YT
         
     def tanyaLink(self):
@@ -51,18 +51,18 @@ class DownloadYT(RewriteFunction):
                 self._link = 'https://www.youtube.com/watch?v=8uy7G2JXVSA'
                 return
 
-            tanya = input("Link Youtube: ")
+            tanya = input((s("Paste Link Youtube: ")))
             link = urlparse(tanya)
             
             if not link.scheme :
                 raise ValueError("Link Tidak Valid")
-            if not (link.netloc == 'www.youtube.com'):
+            if not (link.netloc == 'www.youtube.com' or link.netloc == 'youtube.com' or link.netlock == 'm.youtube.com'):
                 raise ValueError("Bukan Link Youtube")
 
             self._link = tanya
 
         except ValueError as pesan:
-            print(pesan)
+            print(s(pesan))
             self.tanyaLink()
 
     @isDebug.setter
@@ -73,41 +73,37 @@ class DownloadYT(RewriteFunction):
     def infoVideo(self):
         """Menampilkan Informasi Video"""
         
-        print(self.garis())
-        print("Judul\t:",self._YT.title)
-        print("View\t:",self._YT.views)
-        print("Rating\t:",self._YT.rating)
-
-        print("Publish\t:",self._YT.publish_date)
-        print("Durasi\t: {0} Menit".format(self._YT.length / 60))
-        print("Chanel\t:",self._YT.author)
-        
-        print(self.garis())
-    
-
-            
-    
+        print(s("{0:8}: {1}".format('Judul', prCyan(self._YT.title[0:30])) ))
+        print(s("{0:8}: {1}".format('Chanel', self._YT.author)))
+        print("")
+        print(s("{0:8}: {1}".format('Views', self._YT.views)))
+        print(s("{0:8}: {1}".format('Rating', self._YT.rating)))
+        print(s("{0:8}: {1}".format('Publish', self._YT.publish_date)))
+        print(s("{0:8}: {1:.1f} Menit".format('Durasi', self._YT.length / 60)))
 
     
+
     def resolusi(self):
         yts = self._YT.streams
         yt_video = yts.filter(type='video')
         yt_audio = yts.get_audio_only()
         jumlahpilihan = len(yt_video) + 1
         
-        print("{0:2} {1:10} {2}".format('No', 'Resolusi', 'Size'))
+        print(s("{0:3} {1:15} {2}".format('No', 'Resolusi', 'Size')))
+        print(garis())
+
         for i,data in enumerate(yt_video, start=1):
             resolusi = data.resolution
-            print("{0:2} {1:10} {2}".format(i, resolusi, ceksize(data.filesize) ))
+            print(s("{0:3} {1:15} {2}".format(i, resolusi, ceksize(data.filesize + yt_audio.filesize) )) )
 
-        print("{0:2} {1:10} {2}".format(len(yt_video)+1,"Audio MP3", ceksize(yt_audio.filesize)))
-        print(self.garis())
-        strpilih = "Pilih Nomor 1 sampai {0} : ".format(str(jumlahpilihan) )
+        print(s("{0:3} {1:15} {2}".format(len(yt_video)+1,"Audio MP3", ceksize(yt_audio.filesize))))
+        print(garis())
+        strpilih = (s(prYellow("Pilih Nomor 1 sampai {0} : ".format(str(jumlahpilihan) ))))
 
         pilih = pilihAngka(strpilih)
         
         if ((pilih) > jumlahpilihan):
-            print("Pilihan Tidak Valid")
+            print(s("Pilihan Tidak Valid"))
             self.resolusi()
 
         self._Audio = yt_audio
@@ -123,23 +119,38 @@ class DownloadYT(RewriteFunction):
         """ Fungsi awal saat program dijalankan """
 
         if(self._isDebug):
-            print("Mode Debug Active")
+            print(s("Mode Debug Active"))
             
         if self._link is None:
             self.tanyaLink()
         
+        cls()
+        B = Banner()
+        B.cetakbanner()
+        cetakgaris("Pilih Resolusi Video")
+
         self._YT = YouTube(self._link)
         self._YT.check_availability
         
+
+
         self.infoVideo()
+        print("")
         time.sleep(3)
         pilihan = self.resolusi()
         
         cek = Logs()
-        cek.run()
+        if (not cek.cek()):
+            print(s("%s" % prRed("Lokasi penyimpanan belum diset ") ))
+            cek.gantiPath()
+
 
         self._savePath = cek._path
-        print("Jenis file ", prCyan(pilihan))
+
+        cls()
+        B.cetakbanner()
+        cetakgaris("Please Wait.. Downloading")
+        
         try:
             if pilihan == 'video':
                 super(DownloadYT, self).Downloaderffmpeg(self._Audio, self._Video, self._savePath)
@@ -148,7 +159,10 @@ class DownloadYT(RewriteFunction):
             else:
                 raise ValueError("Error")
         except:
-            print("Terjadi kesalahan!")
+            print(s("Terjadi kesalahan!"))
             return
+            
+        sys.exit(prCyan("Terima kasih! ;) "))
+        
         
         

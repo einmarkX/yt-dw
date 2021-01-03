@@ -9,3 +9,5 @@ def prPurple(skk)->str: return("\033[95m{}\033[00m" .format(skk))
 def prCyan(skk)->str: return("\033[96m{}\033[00m" .format(skk)) 
 def prLightGray(skk)->str: return("\033[97m{}\033[00m" .format(skk)) 
 def prBlack(skk)->str: return("\033[98m{}\033[00m" .format(skk)) 
+
+def prEnd()->str: return("\033[00m") 
