@@ -19,7 +19,8 @@ class Banner:
 
     def menu(self): 
         print ("""
-  1 > Download Video Youtube    4 > Keluar 
+  1 > Download Video Youtube     
   2 > Ubah Penyimpanan Video 
   3 > Tentang
+  4 > Keluar
         """)
