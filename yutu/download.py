@@ -56,7 +56,7 @@ class DownloadYT(RewriteFunction):
             
             if not link.scheme :
                 raise ValueError("Link Tidak Valid")
-            if not (link.netloc == 'www.youtube.com' or link.netloc == 'youtube.com' or link.netlock == 'm.youtube.com'):
+            if not link.netloc in ['www.youtube.com', 'youtube.com','m.youtube.com', 'youtu.be','m.youtu.be']:                     
                 raise ValueError("Bukan Link Youtube")
 
             self._link = tanya
