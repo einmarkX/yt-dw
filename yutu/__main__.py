@@ -2,7 +2,6 @@ import sys
 import time
 from urllib.parse import urlparse, parse_qs
 
-from download import DownloadYT
 from helpers import pilihAngka, cls, cetakgaris, s
 from warna import prRed, prCyan, prYellow, prGreen
 from logs import Logs
@@ -26,6 +25,7 @@ def main(bukaBanner = True):
 
         # switch case ribet di python.. if aja :D
         if (pilihmenu == 1):
+            from download import DownloadYT
             # download
             cls()
             B.cetakbanner()
