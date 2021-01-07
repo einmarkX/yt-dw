@@ -1,6 +1,7 @@
 from ffmpeg import RewriteFunction
 from pytube import YouTube
 from urllib.parse import urlparse, parse_qs
+from pytube import Stream
 
 from helpers import ceksize, pilihAngka
 from logs import Logs
@@ -9,6 +10,7 @@ from helpers import cls, s, cetakgaris, garis
 import time
 from banner import Banner
 import sys
+from cli import on_progress
 
 class DownloadYT(RewriteFunction):
     def __init__(self, isDebug=False):
@@ -129,7 +131,8 @@ class DownloadYT(RewriteFunction):
         B.cetakbanner()
         cetakgaris("Pilih Resolusi Video")
 
-        self._YT = YouTube(self._link)
+
+        self._YT = YouTube(self._link, on_progress_callback=on_progress)
         self._YT.check_availability
         
 
@@ -158,11 +161,12 @@ class DownloadYT(RewriteFunction):
                 super(DownloadYT, self).DownloadMP3(self._Audio, self._savePath)
             else:
                 raise ValueError("Error")
-        except:
-            print(s("Terjadi kesalahan!"))
+        except Exception as Pesan:
+            print(s("Terjadi kesalahan! %s" % Pesan))
             return
-            
-        sys.exit(prCyan("Terima kasih! ;) "))
+
+        print("")    
+        sys.exit(s(prCyan("Terima kasih! ;) ")))
         
         
         

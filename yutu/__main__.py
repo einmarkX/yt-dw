@@ -8,7 +8,7 @@ from logs import Logs
 from banner import Banner
 from version import __constributor__
 
-def main(bukaBanner = True):
+def main(bukaBanner = True, debug = False):
     B = Banner(True)
     # Banner
     if bukaBanner:
@@ -20,7 +20,7 @@ def main(bukaBanner = True):
     try:
         pilihmenu = (pilihAngka("  Pilih Menu : "))        
         if (pilihmenu > 4):
-            raise Exception("%sMenu yang dipilih tidak ada! " %(s()) )
+            raise Exception("Menu yang dipilih tidak ada! ")
 
 
         # switch case ribet di python.. if aja :D
@@ -62,7 +62,7 @@ def main(bukaBanner = True):
             
         else:
             # exit
-            sys.exit(prCyan("Terima kasih! ;) "))
+            sys.exit(r(prCyan("Terima kasih! ;) ")))
            
     except Exception as Pesan:
         print(s("Main Error %s" % prRed(Pesan)))
@@ -72,6 +72,6 @@ def main(bukaBanner = True):
     main(False)
 
 
-main()
+main(debug = True)
 
         
