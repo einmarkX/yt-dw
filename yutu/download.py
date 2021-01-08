@@ -1,12 +1,21 @@
+import sys
+from warna import prCyan, prYellow, prLightGray, prRed, prGreen
+from helpers import cls, s, cetakgaris, garis
+
+# Cek Paket PYTube
+try:
+    from pytubex import Stream, YouTube
+except ImportError:
+    print(s(prRed("Pytube tidak ditemukan")))
+    print(s("Install terlebih dahulu untuk melanjutkan"))
+    print(s(prGreen("pkg install pytube")))
+    sys.exit(1)
+
 from ffmpeg import RewriteFunction
-from pytube import YouTube
 from urllib.parse import urlparse, parse_qs
-from pytube import Stream
 
 from helpers import ceksize, pilihAngka
 from logs import Logs
-from warna import prCyan, prYellow, prLightGray, prRed
-from helpers import cls, s, cetakgaris, garis
 import time
 from banner import Banner
 import sys
