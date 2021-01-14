@@ -1,4 +1,4 @@
-#!/bin/bash
+#!$PREFIX/bin/bash
 
 
 #############################################################
@@ -83,7 +83,7 @@ pass(){
 if [ $os==linux-android ]
 then
 	bin_directory=/data/data/com.termux/files/usr/bin
-	if [ -f $bin_directory/ffmpeg ]
+	if [ -f $bin_directory/ffmpeg ] && [ -f $bin_directory/python ]
 	then
 		pass
 	else
@@ -93,7 +93,7 @@ then
 elif [ $os==linux-gnu ]
 then
 	bin_directory=/usr/bin
-	if [ -f $bin_directory/ffmpeg ]
+	if [ -f $bin_directory/ffmpeg ] && [ -f $bin_directory/python ]
 	then
 		pass
 	else
