@@ -1,6 +1,7 @@
 # TOOLS YOUTUBE DOWNLOADER V1.3.8 
 cara menggunakan :
-sh install.sh
+------------
+    $ sh install.sh
 
 # Contributor :
 - Saya
