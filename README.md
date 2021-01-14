@@ -5,4 +5,9 @@ sh install.sh
 # Contributor :
 - Saya
 - https://github.com/jabbarbie
-- https://
+- Bang Hendra :v
+
+# Lapor Bug :
+t.me/CheemsVX
+t.me/jabbarbie
+
