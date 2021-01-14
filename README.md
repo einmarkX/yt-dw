@@ -10,5 +10,6 @@ cara menggunakan :
 
 # Lapor Bug :
 t.me/CheemsVX
+
 t.me/jabbarbie
 
