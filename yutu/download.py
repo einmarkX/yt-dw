@@ -1,14 +1,25 @@
+import sys
+from warna import prCyan, prYellow, prLightGray, prRed, prGreen
+from helpers import cls, s, cetakgaris, garis
+
+# Cek Paket PYTube
+try:
+    from pytube import Stream, YouTube
+except ImportError:
+    print(s(prRed("Pytube tidak ditemukan")))
+    print(s("Install terlebih dahulu untuk melanjutkan"))
+    print(s(prGreen("pkg install pytube")))
+    sys.exit(1)
+
 from ffmpeg import RewriteFunction
-from pytube import YouTube
 from urllib.parse import urlparse, parse_qs
 
 from helpers import ceksize, pilihAngka
 from logs import Logs
-from warna import prCyan, prYellow, prLightGray, prRed
-from helpers import cls, s, cetakgaris, garis
 import time
 from banner import Banner
 import sys
+from cli import on_progress
 
 class DownloadYT(RewriteFunction):
     def __init__(self, isDebug=False):
@@ -129,7 +140,8 @@ class DownloadYT(RewriteFunction):
         B.cetakbanner()
         cetakgaris("Pilih Resolusi Video")
 
-        self._YT = YouTube(self._link)
+
+        self._YT = YouTube(self._link, on_progress_callback=on_progress)
         self._YT.check_availability
         
 
@@ -158,11 +170,12 @@ class DownloadYT(RewriteFunction):
                 super(DownloadYT, self).DownloadMP3(self._Audio, self._savePath)
             else:
                 raise ValueError("Error")
-        except:
-            print(s("Terjadi kesalahan!"))
+        except Exception as Pesan:
+            print(s("Terjadi kesalahan! %s" % Pesan))
             return
-            
-        sys.exit(prCyan("Terima kasih! ;) "))
+
+        print("")    
+        sys.exit(s(prCyan("Terima kasih! ;) ")))
         
         
         
